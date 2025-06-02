@@ -8,6 +8,12 @@ DIR_NAME="customer"
 
 export PGPASSWORD="mysecretpassword"
 
+if [ ! -d "$DIR_NAME" ]; then
+    echo "Directory '$DIR_NAME' does not exist."
+    exit 1
+fi
+
+shopt -s nullglob
 for file in "$DIR_NAME"/*.csv; do
     table=$(basename "$file" .csv)
     psql -U "$DB_USER" -h "$DB_HOST" -p "$DB_PORT" -d "$DB_NAME" -c "
