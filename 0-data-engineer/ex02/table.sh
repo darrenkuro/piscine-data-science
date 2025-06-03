@@ -5,11 +5,13 @@ DB_USER="dlu"
 DB_HOST="localhost"
 DB_PORT="5432"
 PGPASSWORD="mysecretpassword"
+TABLE="data_2022_dec"
 
 export PGPASSWORD
 
 CMD="
-CREATE TABLE IF NOT EXISTS data_2022_dec (
+DROP TABLE IF EXISTS $TABLE;
+CREATE TABLE IF NOT EXISTS $TABLE (
     event_time TIMESTAMP NOT NULL,
     event_type TEXT NOT NULL,
     product_id INT NOT NULL,

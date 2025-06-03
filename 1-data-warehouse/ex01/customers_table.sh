@@ -4,8 +4,9 @@ DB_NAME="piscineds"
 DB_USER="dlu"
 DB_HOST="localhost"
 DB_PORT="5432"
+PGPASSWORD="mysecretpassword"
 
-export PGPASSWORD="mysecretpassword"
+export PGPASSWORD
 
 tables=$(psql -U "$DB_USER" -h "$DB_HOST" -p "$DB_PORT" -d "$DB_NAME" -Atc "
 SELECT tablename FROM pg_tables
@@ -25,6 +26,9 @@ for table in $tables; do
     fi
 done
 
-psql -U "$DB_USER" -h "$DB_HOST" -p "$DB_PORT" -d "$DB_NAME" -c "
+CMD="
 DROP TABLE IF EXISTS customers;
-CREATE TABLE customers AS $unionsql;"
+CREATE TABLE customers AS $unionsql;
+"
+
+psql -U "$DB_USER" -h "$DB_HOST" -p "$DB_PORT" -d "$DB_NAME" -c "$CMD"

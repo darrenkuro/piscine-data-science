@@ -18,6 +18,7 @@ shopt -s nullglob
 for file in "$DIR_NAME"/*.csv; do
     table=$(basename "$file" .csv)
     CMD="
+    DROP TABLE IF EXISTS $table;
     CREATE TABLE IF NOT EXISTS $table (
         event_time timestamp NOT NULL,
         event_type text NOT NULL,
