@@ -4,16 +4,19 @@ DB_NAME="piscineds"
 DB_USER="dlu"
 DB_HOST="localhost"
 DB_PORT="5432"
+PGPASSWORD="mysecretpassword"
 
-export PGPASSWORD="mysecretpassword"
+export PGPASSWORD
 
-psql -U "$DB_USER" -h "$DB_HOST" -p "$DB_PORT" -d "$DB_NAME" -c "
+CMD="
 CREATE TABLE IF NOT EXISTS data_2022_dec (
-    event_time timestamp NOT NULL,
-    event_type text NOT NULL,
-    product_id int NOT NULL,
-    price money NOT NULL,
-    user_id bigint NOT NULL,
+    event_time TIMESTAMP NOT NULL,
+    event_type TEXT NOT NULL,
+    product_id INT NOT NULL,
+    price MONEY NOT NULL,
+    user_id BIGINT NOT NULL,
     user_session UUID
 );
 "
+
+psql -U "$DB_USER" -h "$DB_HOST" -p "$DB_PORT" -d "$DB_NAME" -c "$CMD"
