@@ -13,11 +13,16 @@ services:
 
   pgadmin:
     build:
-      context: pgadmin
+      context: .
+      dockerfile_inline: |
+        FROM dpage/pgadmin4
+        COPY servers.json /pgadmin4/servers.json
     restart: unless-stopped
     environment:
-      PGADMIN_DEFAULT_EMAIL: dlu@student.42berlin.de
-      PGADMIN_DEFAULT_PASSWORD: mysecretpassword
+      PGADMIN_DEFAULT_EMAIL: "dlu@student.42belrin.de"
+      PGADMIN_DEFAULT_PASSWORD: "mysecretpassword"
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: "False"
     ports:
       - "8080:80"
     depends_on:
