@@ -13,12 +13,10 @@ CREATE TEMPORARY TABLE temp_customers AS
 WITH deduplicated AS (
   SELECT *,
     LAG(event_time) OVER (
-        PARTITION BY event_type, product_id
+        PARTITION BY event_type, product_id, user_id
         ORDER BY event_time
     ) AS prev_time
-  FROM (
-    SELECT DISTINCT * FROM customers
-  ) AS distinct_rows
+  FROM customers
 )
 SELECT event_time, event_type, product_id, price, user_id, user_session
 FROM deduplicated

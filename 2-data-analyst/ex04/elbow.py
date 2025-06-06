@@ -6,7 +6,6 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.ticker as ticker
 
-
 # Config
 DB_NAME = "piscineds"
 DB_USER = "dlu"
