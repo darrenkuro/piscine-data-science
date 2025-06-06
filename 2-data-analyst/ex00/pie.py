@@ -7,18 +7,27 @@ DB_NAME = "piscineds"
 DB_USER = "dlu"
 DB_PASS = "mysecretpassword"
 DB_HOST = "localhost"
-QUERY = "SELECT event_type FROM customers"
-OUTPUT_FILE = "pie.png"
 
+# Helpers
+def get_data(query="SELECT * FROM customers"):
+    engine = create_engine(f"postgresql+psycopg2://{DB_USER}:{DB_PASS}@{DB_HOST}/{DB_NAME}")
+    return pd.read_sql(query, engine)
+
+def save_plot(ax, x="", y="", filename="plot.png"):
+    ax.set_xlabel(x)
+    ax.set_ylabel(y)
+
+    fig = ax.get_figure()  # Get the parent figure from ax
+    fig.tight_layout()
+    fig.savefig(filename)
+    plt.clf()
 
 # Main
 try:
-    engine = create_engine(f"postgresql+psycopg2://{DB_USER}:{DB_PASS}@{DB_HOST}/{DB_NAME}")
-    df = pd.read_sql(QUERY, engine)
+    df = get_data("SELECT event_type FROM customers")
 
     counts = df['event_type'].value_counts()
-    counts.plot.pie(autopct='%1.1f%%', title='User Activity Chart')
-    plt.tight_layout()
-    plt.savefig(OUTPUT_FILE)
+    ax = counts.plot.pie(autopct='%1.1f%%')
+    save_plot(ax, filename="pie.png")
 except Exception as e:
     print(f"Error: {e}")
