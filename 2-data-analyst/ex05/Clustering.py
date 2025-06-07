@@ -1,5 +1,4 @@
 from sklearn.cluster import KMeans
-from sklearn.preprocessing import StandardScaler
 import matplotlib.pyplot as plt
 from sqlalchemy import create_engine
 import pandas as pd
@@ -71,12 +70,19 @@ try:
         avg_monetary=('monetary', 'mean')
     ).reset_index()
 
+    # Count how many users are in each segment
+    segment_counts = rfm['segment'].value_counts().reset_index()
+    segment_counts.columns = ['segment', 'count']
+
+    # Merge count into cluster_stats
+    cluster_stats = cluster_stats.merge(segment_counts, on='segment')
+
     plt.figure(figsize=(8, 6))
     ax1 = sns.scatterplot(
         data=cluster_stats,
         x='median_recency',
         y='median_frequency',
-        size='avg_monetary',
+        size='count',
         sizes=(200, 2000),
         hue='segment',
         legend=False,

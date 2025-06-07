@@ -49,6 +49,5 @@ try:
     ax2.set_xticks(range(0, 250, 50))
     save_plot(ax2, x="monetary value in ₳", y="customers", filename="histo2.png")
 
-
 except Exception as e:
     print(f"Error: {e}")

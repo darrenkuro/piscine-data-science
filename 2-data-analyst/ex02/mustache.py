@@ -56,9 +56,14 @@ try:
 
     # Box plot 3
     df['date'] = df['event_time'].dt.date
-    basket = df.groupby(['user_id', 'user_session', 'date'])['price'].sum()
-    avg_basket_per_user = basket.groupby('user_id').mean()
+    baskets = df.groupby(["user_id", "user_session"])["price"].sum().reset_index()
+
+    avg_basket_per_user = baskets.groupby("user_id")["price"].mean()
+    
     ax3 = sns.boxplot(x=avg_basket_per_user, showfliers=False)
+    # df_ranked = avg_basket_per_user.sort_values(ascending=False).reset_index()
+    # df_ranked.columns = ['user_id', 'avg_basket']
+    # print(df_ranked)
     save_plot(ax3, filename="box3.png")
 
 except Exception as e:
