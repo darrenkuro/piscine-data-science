@@ -2,7 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import MinMaxScaler
 
-TRAIN_PATH = "Train_knight.csv"
+TRAIN_PATH = "../Train_knight.csv"
 
 try:
     df_train = pd.read_csv(TRAIN_PATH)

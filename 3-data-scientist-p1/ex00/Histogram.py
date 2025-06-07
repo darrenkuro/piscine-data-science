@@ -3,8 +3,8 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 # Config
-FILE_TEST = "Test_knight.csv"
-FILE_TRAIN = "Train_knight.csv"
+FILE_TEST = "../Test_knight.csv"
+FILE_TRAIN = "../Train_knight.csv"
 
 # Main
 try:
@@ -33,7 +33,7 @@ try:
 
     for i, column in enumerate(features.columns, start=1):
         plt.subplot(ROWS, COLS, i)
-        sns.histplot(data=train_df, x=column, hue="knight", kde=False, palette="pastel", bins=20)
+        sns.histplot(data=train_df, x=column, hue="knight", kde=False, palette="pastel", bins=40, edgecolor=None)
         plt.xlabel("")
         plt.ylabel("")
         plt.title(column)

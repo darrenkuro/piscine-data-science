@@ -1,7 +1,7 @@
 import pandas as pd
 
 # Config
-FILE_TRAIN = "Train_knight.csv"
+FILE_TRAIN = "../Train_knight.csv"
 
 # Main
 try:
@@ -11,7 +11,7 @@ try:
 
     corr_matrix = df_numeric.corr() # Default: Pearson
     corr_sorted = corr_matrix["knight"].abs().sort_values(ascending=False)
-    print(corr_sorted)
+    print(corr_sorted.to_string())
 
 except Exception as e:
     print(f"Error: {e}")

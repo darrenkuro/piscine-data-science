@@ -1,7 +1,7 @@
 import pandas as pd
 from sklearn.model_selection import train_test_split
 
-INPUT_FILE = "Train_knight.csv"
+INPUT_FILE = "../Train_knight.csv"
 TRAIN_OUTPUT = "Training_knight.csv"
 VALID_OUTPUT = "Validation_knight.csv"
 

@@ -1,8 +1,8 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
-FILE_TRAIN = "Train_knight.csv"
-FILE_TEST = "Test_knight.csv"
+FILE_TRAIN = "../Train_knight.csv"
+FILE_TEST = "../Test_knight.csv"
 
 try:
     df_train = pd.read_csv(FILE_TRAIN)
@@ -34,7 +34,7 @@ try:
 
     # Plot #3: clusters separated, no separation (low corr)
     x_col = "Push"
-    y_col = "Grasping"
+    y_col = "Deflection"
     ax3 = axes[0, 1]
 
     ax3.scatter(df_jedi[x_col], df_jedi[y_col], color='blue', alpha=0.5, label="Jedi")
@@ -53,9 +53,7 @@ try:
 
     # Save
     plt.tight_layout()
-    plt.savefig("plot.png")
-
-    # Check Plot #1, subject reversed?
+    plt.savefig("points.png")
 
 except Exception as e:
     print(f"Error: {e}")
