@@ -53,6 +53,7 @@ try:
     monthly_sales = df.groupby('month')['price'].sum() / 1_000_000  # Convert to millions
     monthly_sales.index = monthly_sales.index.strftime('%b')  # Group index name
     ax2 = monthly_sales.plot(figsize=(10, 6), kind='bar', color='lightsteelblue', width=0.8)
+    ax2.set_xticklabels(monthly_sales.index, rotation=0)  # Set x labels horizontal
     save_plot(ax2, x="month", y="total sales in million of ₳", filename="chart2.png")
 
     # Chart 3: Average spending per customer
