@@ -27,7 +27,7 @@ def save_plot(ax, x="", y="", filename="plot.png"):
 # Main
 try:
     QUERY = """
-    SELECT event_time, price::numeric AS price, event_type, user_id
+    SELECT event_time, price::numeric AS price, event_type, user_id, user_session
     FROM customers
     WHERE event_type = 'purchase'
     """
@@ -54,9 +54,11 @@ try:
     ax2.set_xlim(-1, 13)
     save_plot(ax2, x="price", filename="box2.png")
 
-    # Box plot 3...?
-    avg_basket = df.groupby(['user_id', 'event_time'])['price'].mean()
-    ax3 = sns.boxplot(x=avg_basket)
+    # Box plot 3
+    df['date'] = df['event_time'].dt.date
+    basket = df.groupby(['user_id', 'user_session', 'date'])['price'].sum()
+    avg_basket_per_user = basket.groupby('user_id').mean()
+    ax3 = sns.boxplot(x=avg_basket_per_user, showfliers=False)
     save_plot(ax3, filename="box3.png")
 
 except Exception as e:
