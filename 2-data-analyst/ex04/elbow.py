@@ -53,7 +53,7 @@ try:
     ax.ticklabel_format(style='plain', axis='y')
     ax.set_xlim(0.5, 11)
     ax.set_xticks(range(2, 11, 2))
-    save_plot(ax, x="number of clusters", filename="elbow.png", title="The Elbow Method")
+    save_plot(ax, x="Number of clusters", filename="elbow.png", title="The Elbow Method")
 
 except Exception as e:
     print(f"Error: {e}")

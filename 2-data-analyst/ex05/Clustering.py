@@ -73,6 +73,7 @@ try:
     # Count how many users are in each segment
     segment_counts = rfm['segment'].value_counts().reset_index()
     segment_counts.columns = ['segment', 'count']
+    segment_counts = segment_counts.sort_values(by='count', ascending=False)
 
     # Merge count into cluster_stats
     cluster_stats = cluster_stats.merge(segment_counts, on='segment')
@@ -98,10 +99,6 @@ try:
     save_plot(ax1, x="Median Recency (month)", y="Median Frequency", filename="bubble.png")
 
     # Plot 2
-    segment_counts = rfm['segment'].value_counts().reset_index()
-    segment_counts.columns = ['segment', 'count']
-    segment_counts = segment_counts.sort_values(by='count', ascending=False)
-
     plt.figure(figsize=(12, 6))
     ax2 = sns.barplot(
         data=segment_counts,

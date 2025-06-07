@@ -41,7 +41,7 @@ try:
 
     # Box plot 1
     marker = dict(marker='D', markerfacecolor='dimgray', markersize=6, linestyle='none')
-    ax1 = sns.boxplot(x=df['price'], flierprops=marker)
+    ax1 = sns.boxplot(x=df['price'], color="mediumseagreen", flierprops=marker)
     save_plot(ax1, x="price", filename="box1.png")
 
     # Box plot 2
@@ -49,21 +49,15 @@ try:
         x=df['price'],
         color="mediumseagreen",
         boxprops=dict(facecolor="mediumseagreen", edgecolor="black"),
-        flierprops=dict(marker=''), # Hide outliers
+        showfliers=False
     )
     ax2.set_xlim(-1, 13)
     save_plot(ax2, x="price", filename="box2.png")
 
     # Box plot 3
-    df['date'] = df['event_time'].dt.date
     baskets = df.groupby(["user_id", "user_session"])["price"].sum().reset_index()
-
     avg_basket_per_user = baskets.groupby("user_id")["price"].mean()
-    
     ax3 = sns.boxplot(x=avg_basket_per_user, showfliers=False)
-    # df_ranked = avg_basket_per_user.sort_values(ascending=False).reset_index()
-    # df_ranked.columns = ['user_id', 'avg_basket']
-    # print(df_ranked)
     save_plot(ax3, filename="box3.png")
 
 except Exception as e:
