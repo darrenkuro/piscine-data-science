@@ -3,50 +3,68 @@ import pandas as pd
 from sklearn.tree import DecisionTreeClassifier, plot_tree
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import LabelEncoder
+from sklearn.metrics import classification_report, f1_score
 import matplotlib.pyplot as plt
 
-# Load train and test data
-df_train = pd.read_csv(sys.argv[1])
-df_test = pd.read_csv(sys.argv[2])
+FILE_VALIDATION = "../Validation_knight.csv"
 
-# Separate features and labels
-X_train = df_train.drop(columns=["knight"])
-y_train = df_train["knight"]
+try:
+    if len(sys.argv) != 3:
+        print("Usage: python Tree.py Training_knight.csv Test_knight.csv")
+        exit(1)
+    
+    df_train = pd.read_csv(sys.argv[1])
+    df_test = pd.read_csv(sys.argv[2])
 
-X_test = df_test.drop(columns=["knight"], errors='ignore')
+    X_train = df_train.drop(columns=["knight"])
+    y_train = df_train["knight"]
 
-# Encode labels
-encoder = LabelEncoder()
-y_train_encoded = encoder.fit_transform(y_train)
+    X_test = df_test.drop(columns=["knight"], errors='ignore')
 
-# Train Decision Tree
-dtc = DecisionTreeClassifier(random_state=42)
-dtc.fit(X_train, y_train_encoded)
+    encoder = LabelEncoder()
+    y_train_encoded = encoder.fit_transform(y_train)
 
-# Random Forest
-rf = RandomForestClassifier(n_estimators=100, random_state=42)
-rf.fit(X_train, y_train_encoded)
+    # Train Decision Tree
+    dt = DecisionTreeClassifier(random_state=42)
+    dt.fit(X_train, y_train_encoded)
 
-# Predict
-y_pred_encoded_rf = rf.predict(X_test)
-y_pred_rf = encoder.inverse_transform(y_pred_encoded_rf)
+    y_pred_encoded_dt = dt.predict(X_test)
+    y_pred_dt = encoder.inverse_transform(y_pred_encoded_dt)
 
-# Predict on test set
-y_pred_encoded_dtc = dtc.predict(X_test)
-y_pred_dtc = encoder.inverse_transform(y_pred_encoded_dtc)
+    # Random Forest
+    rf = RandomForestClassifier(n_estimators=100, random_state=42)
+    rf.fit(X_train, y_train_encoded)
 
-# Write predictions to Tree.txt
-with open("Tree.txt", "w") as f:
-    for label in y_pred_dtc: # Use decision tree 
-        f.write(label + "\n")
+    y_pred_encoded_rf = rf.predict(X_test)
+    y_pred_rf = encoder.inverse_transform(y_pred_encoded_rf)
 
-# Plot one of the trees in the forest
-plt.figure(figsize=(20, 10))
-plot_tree(rf.estimators_[0], feature_names=X_train.columns,
-          class_names=encoder.classes_, filled=True)
-plt.savefig("random_forest.png")
+    # Write predictions
+    with open("Tree.txt", "w") as f:
+        f.write("\n".join(y_pred_dt)) # Use decision tree 
 
-# Plot and show the decision tree
-plt.figure(figsize=(20, 10))
-plot_tree(dtc, feature_names=X_train.columns, class_names=encoder.classes_, filled=True)
-plt.savefig("decision_tree.png")
+    # Check f1 score of decision tree with validation set
+    df_val = pd.read_csv("../Validation_knight.csv")
+    X_val = df_val.drop(columns=["knight"])
+    y_val = encoder.transform(df_val["knight"])
+
+    y_val_pred = dt.predict(X_val)
+    print("Decision Tree Evaluation on Validation Set:")
+    print(classification_report(y_val, y_val_pred, target_names=encoder.classes_))
+
+    f1 = f1_score(y_val, y_val_pred, average="weighted")
+    print(f"Weighted F1 Score: {f1:.4f}")
+
+    # Plot random forest
+    plt.figure(figsize=(20, 10))
+    plot_tree(rf.estimators_[0], feature_names=X_train.columns,
+            class_names=encoder.classes_, filled=True)
+    plt.savefig("random_forest.png")
+
+    # Plot decision tree
+    plt.figure(figsize=(20, 10))
+    plot_tree(dt, feature_names=X_train.columns, class_names=encoder.classes_, filled=True)
+    plt.savefig("decision_tree.png")
+
+except Exception as e:
+    print(f"Error: {e}")
+    exit(1)
