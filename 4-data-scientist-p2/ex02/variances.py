@@ -19,12 +19,14 @@ try:
 
     print("Variances (Percentage):")
     print(explained_var)
+    print("\n")
 
-    print("\nCumulative Variance (Percentage):")
+    print("Cumulative Variance (Percentage):")
     print(cumulative_var)
+    print("\n")
 
     n_components_90 = (cumulative_var < 90).sum() + 1
-    print(f"\nComponents needed to reach 90% variance: {n_components_90}")
+    print(f"Components needed to reach 90% variance: {n_components_90}")
 
     plt.figure(figsize=(8, 5))
     plt.plot(np.arange(1, len(cumulative_var) + 1), cumulative_var)
