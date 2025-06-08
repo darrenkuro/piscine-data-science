@@ -6,7 +6,7 @@ FILE_TRAIN = "../Train_knight.csv"
 
 try:
     df = pd.read_csv(FILE_TRAIN)
-    X = df.drop(columns=["knight"]) 
+    X = df.drop(columns=["knight"])
     X_scaled = StandardScaler().fit_transform(X)
     X_scaled_df = pd.DataFrame(X_scaled, columns=X.columns)
 

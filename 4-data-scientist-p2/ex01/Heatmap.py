@@ -7,11 +7,10 @@ FILE_TRAIN = "../Train_knight.csv"
 try:
     df = pd.read_csv(FILE_TRAIN)
     df["knight"] = df["knight"].map({"Jedi": 0, "Sith": 1})
-    corr_matrix = df.corr(numeric_only=True)
 
     plt.figure(figsize=(10, 10))
     sns.heatmap(
-        corr_matrix,
+        df.corr(),
         cmap="magma",
         center=0,
         annot=False,

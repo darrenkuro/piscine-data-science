@@ -26,7 +26,6 @@ try:
     y_val = val_df["knight"]
     X_test = scaler.transform(test_df.drop(columns=["knight"], errors="ignore"))
 
-    # Encode labels
     encoder = LabelEncoder()
     all_labels = pd.concat([y_train, y_val], ignore_index=True)
     encoder.fit(all_labels)
@@ -46,12 +45,9 @@ try:
     best_k = list(range(1, 21))[f1_scores.index(max(f1_scores))]
     print(f"Best k for KNN: {best_k} with F1 = {max(f1_scores):.4f}")
 
-    # Define base classifiers
     dt = DecisionTreeClassifier(random_state=42)
     knn = KNeighborsClassifier(n_neighbors=best_k)
     lr = LogisticRegression(max_iter=2000)
-
-    # Voting classifier
     voting = VotingClassifier(
         estimators=[("dt", dt), ("knn", knn), ("lr", lr)],
         voting="hard"
@@ -69,6 +65,7 @@ try:
     test_pred = voting.predict(X_test)
     test_labels = encoder.inverse_transform(test_pred)
 
+    # Write to file
     with open("Voting.txt", "w") as f:
         f.write("\n".join(test_labels))
 

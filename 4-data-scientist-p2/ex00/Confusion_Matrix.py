@@ -23,31 +23,32 @@ try:
 
     labels = sorted(list(set(y_true + y_pred)))
     cm = confusion_matrix(y_true, y_pred, labels=labels)
-    report = classification_report(y_true, y_pred, labels=labels, output_dict=True, zero_division=0)
+    report = classification_report(y_true, y_pred, labels=labels, output_dict=True)
     acc = accuracy_score(y_true, y_pred)
 
     # Print metrics
-    print(f"{'Class':<8}{'Precision':>10}{'Recall':>10}{'F1-score':>10}{'Total':>8}\n")
+    print(f"{'':<8}{'precision':>10}{'recall':>10}{'f1-score':>10}{'total':>8}\n")
     for label in labels:
         precision = report[label]["precision"]
         recall = report[label]["recall"]
         f1 = report[label]["f1-score"]
         support = int(report[label]["support"])
         print(f"{label:<8}{precision:10.2f}{recall:10.2f}{f1:10.2f}{support:8d}")
-
-    print(f"\n{'Accuracy':<8}{acc:10.2f}{'':>20}{len(y_true):8d}\n")
+    # print(report)
+    print("\n")
+    print(f"{'accuracy':<8}{'':>20}{acc:10.2f}{len(y_true):8d}\n")
     print(np.array2string(cm, separator=' '))
 
     # Plot the graph
-    plt.figure(figsize=(6, 5))
-    sns.heatmap(cm, annot=True, fmt='d', cmap='viridis', xticklabels=labels, yticklabels=labels)
-    plt.xlabel("Prediction")
-    plt.ylabel("Truth")
+    plt.figure(figsize=(8, 5))
+    sns.heatmap(cm, annot=True, fmt='d', cmap='viridis', xticklabels=[0, 1], yticklabels=[0, 1])
+    # plt.xlabel("Prediction")
+    # plt.ylabel("Truth")
 
     plt.tight_layout()
     plt.savefig("confusion_matrix.png")
-
     plt.close()
+
 except Exception as e:
     print(f"Error: {e}")
     exit(1)

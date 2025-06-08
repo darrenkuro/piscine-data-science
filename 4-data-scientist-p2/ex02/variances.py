@@ -8,8 +8,8 @@ FILE_TRAIN = "../Train_knight.csv"
 
 try:
     df = pd.read_csv(FILE_TRAIN)
-    X = df.drop(columns=["knight"]) 
-    X_scaled = StandardScaler().fit_transform(X)
+    df["knight"] = df["knight"].map({"Jedi": 0, "Sith": 1})
+    X_scaled = StandardScaler().fit_transform(df)
 
     pca = PCA()
     pca.fit(X_scaled)
@@ -31,11 +31,12 @@ try:
     plt.figure(figsize=(8, 5))
     plt.plot(np.arange(1, len(cumulative_var) + 1), cumulative_var)
     plt.xlabel('Number of components')
-    plt.ylabel('Explained Variance (%)')
+    plt.ylabel('Explained variance (%)')
 
     plt.tight_layout()
     plt.savefig("variance.png")
     plt.close()
+
 except Exception as e:
     print(f"Error: {e}")
     exit(1)

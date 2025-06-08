@@ -50,7 +50,7 @@ try:
     plt.savefig("knn_accuracy_scores.png")
     plt.close()
 
-    # Choose best k (with max F1)
+    # Choose best k
     best_k = k_values[f1_scores.index(max(f1_scores))]
     print(f"Best k: {best_k} with F1 = {max(f1_scores):.4f}")
 
