@@ -4,29 +4,36 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 
-df = pd.read_csv("../Train_knight.csv")
-X = df.drop(columns=["knight"]) 
-X_scaled = StandardScaler().fit_transform(X)
+FILE_TRAIN = "../Train_knight.csv"
 
-pca = PCA()
-pca.fit(X_scaled)
+try:
+    df = pd.read_csv(FILE_TRAIN)
+    X = df.drop(columns=["knight"]) 
+    X_scaled = StandardScaler().fit_transform(X)
 
-explained_var = pca.explained_variance_ratio_ * 100 # To percentage
-cumulative_var = explained_var.cumsum()
+    pca = PCA()
+    pca.fit(X_scaled)
 
-print("Variances (Percentage):")
-print(explained_var)
+    explained_var = pca.explained_variance_ratio_ * 100 # To percentage
+    cumulative_var = explained_var.cumsum()
 
-print("\nCumulative Variance (Percentage):")
-print(cumulative_var)
+    print("Variances (Percentage):")
+    print(explained_var)
 
-# How many components to reach 90%?
-n_components_90 = (cumulative_var < 90).sum() + 1
-print(f"\nComponents needed to reach 90% variance: {n_components_90}")
+    print("\nCumulative Variance (Percentage):")
+    print(cumulative_var)
 
-plt.figure(figsize=(8, 5))
-plt.plot(np.arange(1, len(cumulative_var) + 1), cumulative_var)
-plt.xlabel('Number of components')
-plt.ylabel('Explained Variance (%)')
-plt.tight_layout()
-plt.savefig("variance.png")
+    n_components_90 = (cumulative_var < 90).sum() + 1
+    print(f"\nComponents needed to reach 90% variance: {n_components_90}")
+
+    plt.figure(figsize=(8, 5))
+    plt.plot(np.arange(1, len(cumulative_var) + 1), cumulative_var)
+    plt.xlabel('Number of components')
+    plt.ylabel('Explained Variance (%)')
+
+    plt.tight_layout()
+    plt.savefig("variance.png")
+    plt.close()
+except Exception as e:
+    print(f"Error: {e}")
+    exit(1)
