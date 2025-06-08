@@ -3,6 +3,7 @@ import pandas as pd
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics import f1_score, accuracy_score
+from sklearn.preprocessing import StandardScaler
 import matplotlib.pyplot as plt
 
 FILE_VALIDATION = "../Validation_knight.csv"
@@ -16,11 +17,13 @@ try:
     test_df = pd.read_csv(sys.argv[2])   # Test
     val_df = pd.read_csv(FILE_VALIDATION)  # Validationg for tweaking k
 
-    X_train = train_df.drop(columns=["knight"])
+    # KNN must be standardized
+    scaler = StandardScaler()
+    X_train = scaler.fit_transform(train_df.drop(columns=["knight"]))
     y_train = train_df["knight"]
-    X_val = val_df.drop(columns=["knight"])
+    X_val = scaler.transform(val_df.drop(columns=["knight"]))
     y_val = val_df["knight"]
-    X_test = test_df.drop(columns=["knight"], errors='ignore')
+    X_test = scaler.transform(test_df.drop(columns=["knight"], errors='ignore'))
 
     encoder = LabelEncoder()
     y_train_enc = encoder.fit_transform(y_train)

@@ -1,5 +1,4 @@
 import sys
-from sklearn.metrics import confusion_matrix, classification_report, accuracy_score
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -21,22 +20,34 @@ try:
     if len(y_true) != len(y_pred):
         raise ValueError("Length mismatch between truth and prediction files.")
 
-    labels = sorted(list(set(y_true + y_pred)))
-    cm = confusion_matrix(y_true, y_pred, labels=labels)
-    report = classification_report(y_true, y_pred, labels=labels, output_dict=True)
-    acc = accuracy_score(y_true, y_pred)
+    classes = sorted(set(y_true + y_pred))
+    label_to_index = {label: idx for idx, label in enumerate(classes)} # Map string to number
+    n_classes = len(classes)
 
-    # Print metrics
+    # Manually create confusion matrix
+    cm = np.zeros((n_classes, n_classes), dtype=int)
+    for true_label, pred_label in zip(y_true, y_pred):
+        i = label_to_index[true_label]
+        j = label_to_index[pred_label]
+        cm[i][j] += 1
+
+    # Compute metrics manually
     print(f"{'':<8}{'precision':>10}{'recall':>10}{'f1-score':>10}{'total':>8}\n")
-    for label in labels:
-        precision = report[label]["precision"]
-        recall = report[label]["recall"]
-        f1 = report[label]["f1-score"]
-        support = int(report[label]["support"])
+    total_correct = 0
+    for i, label in enumerate(classes):
+        TP = cm[i][i]
+        FP = cm[:, i].sum() - TP
+        FN = cm[i, :].sum() - TP
+        support = cm[i, :].sum()
+        total_correct += TP
+
+        precision = TP / (TP + FP) if (TP + FP) else 0.0
+        recall = TP / (TP + FN) if (TP + FN) else 0.0
+        f1 = 2 * precision * recall / (precision + recall) if (precision + recall) else 0.0
         print(f"{label:<8}{precision:10.2f}{recall:10.2f}{f1:10.2f}{support:8d}")
-    # print(report)
-    print("\n")
-    print(f"{'accuracy':<8}{'':>20}{acc:10.2f}{len(y_true):8d}\n")
+
+    accuracy = total_correct / len(y_true)
+    print(f"\n{'accuracy':<8}{'':>20}{accuracy:10.2f}{len(y_true):8d}\n")
     print(np.array2string(cm, separator=' '))
 
     # Plot the graph
